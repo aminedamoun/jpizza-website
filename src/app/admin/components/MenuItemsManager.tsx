@@ -193,7 +193,7 @@ export default function MenuItemsManager() {
       const subInfo = subcategories.find(s => s.id === subId);
       const label = subInfo ? `${subInfo.emoji} ${subInfo.label}` : 'No Subcategory';
 
-      groups.push({ subcategoryId: subId, subcategoryLabel: label, items: subItems });
+      groups.push({ subcategoryId: subId ?? null, subcategoryLabel: label, items: subItems });
     }
 
     // Sort groups: no-subcategory last

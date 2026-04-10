@@ -4,15 +4,7 @@ import { useState, useEffect } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import { adminService } from '@/lib/services/adminService';
 
-interface RestaurantImage {
-  id: string;
-  title: string;
-  imageUrl: string;
-  imageAlt: string;
-  spanClass?: string;
-  displayOrder: number;
-  isActive?: boolean;
-}
+import type { AdminRestaurantImage as RestaurantImage } from '@/lib/data/staticData';
 
 export default function ExperienceJPizza() {
   const [images, setImages] = useState<RestaurantImage[]>([]);

@@ -65,29 +65,10 @@ export default function OffersManager() {
     e.preventDefault();
 
     try {
-      const supabase = (await import('@/lib/supabase/client')).createClient();
-      const payload: any = {
-        title: formData.title,
-        subtitle: formData.subtitle,
-        description: formData.description,
-        image_url: formData.imageUrl,
-        image_alt: formData.imageAlt,
-        cta_text: formData.ctaText,
-        cta_link: formData.ctaLink,
-        status: formData.status,
-        valid_until: formData.validUntil,
-        terms: formData.terms,
-        display_order: formData.displayOrder,
-        price: (formData as any).price || null,
-        rating: (formData as any).rating ?? 5,
-      };
-
       if (editingOffer?.id) {
-        const { error } = await supabase.from('offers').update(payload).eq('id', editingOffer.id);
-        if (error) throw error;
+        await adminService.updateOffer(editingOffer.id, formData);
       } else {
-        const { error } = await supabase.from('offers').insert(payload);
-        if (error) throw error;
+        await adminService.createOffer(formData);
       }
       await loadOffers();
       resetForm();

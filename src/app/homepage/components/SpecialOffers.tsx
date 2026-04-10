@@ -4,22 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
-import { createClient } from '@/lib/supabase/client';
-
-interface Offer {
-  id: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  imageUrl: string;
-  imageAlt: string;
-  price?: string;
-  ctaText?: string;
-  ctaLink?: string;
-  validUntil?: string;
-  terms?: string;
-  rating?: number;
-}
+import { menuService } from '@/lib/services/menuService';
+import type { Offer } from '@/lib/data/staticData';
 
 function StarRating({ rating = 5 }: { rating?: number }) {
   return (
@@ -50,32 +36,8 @@ export default function SpecialOffers() {
   useEffect(() => {
     async function loadOffers() {
       try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from('offers')
-          .select('*')
-          .eq('status', 'active')
-          .order('display_order', { ascending: true })
-          .limit(6);
-
-        if (!error && data) {
-          setOffers(
-            data.map((row) => ({
-              id: row.id,
-              title: row.title,
-              subtitle: row.subtitle,
-              description: row.description,
-              imageUrl: row.image_url,
-              imageAlt: row.image_alt,
-              price: row.price,
-              ctaText: row.cta_text || 'Order Now',
-              ctaLink: row.cta_link || '/delivery',
-              validUntil: row.valid_until,
-              terms: row.terms,
-              rating: row.rating ?? 5,
-            }))
-          );
-        }
+        const data = await menuService.getActiveOffers();
+        setOffers(data);
       } catch (error) {
         console.error('Error loading offers:', error);
       } finally {

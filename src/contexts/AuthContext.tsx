@@ -1,23 +1,26 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import type { User, Session } from '@supabase/supabase-js';
+import { createContext, useContext, useState } from 'react';
 
-interface SignUpMetadata {
-  fullName?: string;
-  avatarUrl?: string;
+interface AuthUser {
+  id: string;
+  email: string;
+  email_confirmed_at?: string | null;
+}
+
+interface AuthSession {
+  user: AuthUser;
 }
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: AuthUser | null;
+  session: AuthSession | null;
   loading: boolean;
-  signUp: (email: string, password: string, metadata?: SignUpMetadata) => Promise<{ user: User | null; session: Session | null }>;
-  signIn: (email: string, password: string) => Promise<{ user: User; session: Session }>;
+  signUp: (email: string, password: string) => Promise<{ user: AuthUser | null; session: AuthSession | null }>;
+  signIn: (email: string, password: string) => Promise<{ user: AuthUser; session: AuthSession }>;
   signOut: () => Promise<void>;
-  getCurrentUser: () => Promise<User | null>;
+  getCurrentUser: () => Promise<AuthUser | null>;
   isEmailVerified: () => boolean;
   getUserProfile: () => Promise<Record<string, unknown> | null>;
 }
@@ -32,83 +35,46 @@ export const useAuth = () => {
   return context;
 };
 
+// Simple local auth - replace with your preferred auth provider later
+const ADMIN_EMAIL = 'admin@jpizzabar.com';
+const ADMIN_PASSWORD = 'admin123';
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [loading] = useState(false);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const signUp = async (email: string, password: string, metadata: SignUpMetadata = {}) => {
-    const redirectTo = typeof window !== 'undefined'
-      ? `${window.location.origin}/auth/callback`
-      : undefined;
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: metadata.fullName || '',
-          avatar_url: metadata.avatarUrl || ''
-        },
-        emailRedirectTo: redirectTo
-      }
-    });
-    if (error) throw error;
-    return data;
+  const signUp = async (email: string, _password: string) => {
+    const newUser: AuthUser = { id: '1', email, email_confirmed_at: new Date().toISOString() };
+    setUser(newUser);
+    const newSession: AuthSession = { user: newUser };
+    setSession(newSession);
+    return { user: newUser, session: newSession };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-    if (error) throw error;
-    return data;
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      const adminUser: AuthUser = { id: '1', email, email_confirmed_at: new Date().toISOString() };
+      setUser(adminUser);
+      const adminSession: AuthSession = { user: adminUser };
+      setSession(adminSession);
+      return { user: adminUser, session: adminSession };
+    }
+    throw new Error('Invalid email or password');
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    setUser(null);
+    setSession(null);
   };
 
-  const getCurrentUser = async () => {
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error) throw error;
-    return user;
-  };
+  const getCurrentUser = async () => user;
 
-  const isEmailVerified = () => {
-    return user?.email_confirmed_at != null;
-  };
+  const isEmailVerified = () => user?.email_confirmed_at != null;
 
   const getUserProfile = async () => {
     if (!user) return null;
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-    if (error) throw error;
-    return data;
+    return { id: user.id, email: user.email };
   };
 
   const value: AuthContextType = {
@@ -120,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signOut,
     getCurrentUser,
     isEmailVerified,
-    getUserProfile
+    getUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,66 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import AppImage from '@/components/ui/AppImage';
 import { adminService } from '@/lib/services/adminService';
-
-interface AboutImage {
-  id?: string;
-  title: string;
-  imageUrl: string;
-  imageAlt: string;
-  displayOrder: number;
-  isActive: boolean;
-}
-
-async function getAllAboutImages(): Promise<AboutImage[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('about_images')
-    .select('*')
-    .order('display_order', { ascending: true });
-  if (error) { console.error('Error loading about images:', error); return []; }
-  return (data || []).map((row) => ({
-    id: row.id,
-    title: row.title,
-    imageUrl: row.image_url,
-    imageAlt: row.image_alt,
-    displayOrder: row.display_order,
-    isActive: row.is_active,
-  }));
-}
-
-async function createAboutImage(image: AboutImage): Promise<void> {
-  const supabase = createClient();
-  const { error } = await supabase.from('about_images').insert({
-    title: image.title,
-    image_url: image.imageUrl,
-    image_alt: image.imageAlt,
-    display_order: image.displayOrder,
-    is_active: image.isActive,
-  });
-  if (error) throw error;
-}
-
-async function updateAboutImage(id: string, image: Partial<AboutImage>): Promise<void> {
-  const supabase = createClient();
-  const updateData: any = {};
-  if (image.title !== undefined) updateData.title = image.title;
-  if (image.imageUrl !== undefined) updateData.image_url = image.imageUrl;
-  if (image.imageAlt !== undefined) updateData.image_alt = image.imageAlt;
-  if (image.displayOrder !== undefined) updateData.display_order = image.displayOrder;
-  if (image.isActive !== undefined) updateData.is_active = image.isActive;
-  updateData.updated_at = new Date().toISOString();
-  const { error } = await supabase.from('about_images').update(updateData).eq('id', id);
-  if (error) throw error;
-}
-
-async function deleteAboutImage(id: string): Promise<void> {
-  const supabase = createClient();
-  const { error } = await supabase.from('about_images').delete().eq('id', id);
-  if (error) throw error;
-}
+import type { AboutImage } from '@/lib/data/staticData';
 
 export default function AboutImagesManager() {
   const [images, setImages] = useState<AboutImage[]>([]);
@@ -81,7 +24,7 @@ export default function AboutImagesManager() {
   const loadImages = async () => {
     try {
       setLoading(true);
-      const data = await getAllAboutImages();
+      const data = await adminService.getAllAboutImages();
       setImages(data);
     } catch (error) {
       console.error('Failed to load about images:', error);
@@ -97,7 +40,7 @@ export default function AboutImagesManager() {
       setUploading(true);
       const imageUrl = await adminService.uploadImage(file);
       const fileName = file.name.split('.')[0].replace(/[^a-zA-Z0-9\s]/g, ' ');
-      await createAboutImage({
+      await adminService.createAboutImage({
         title: fileName,
         imageUrl,
         imageAlt: fileName,
@@ -119,9 +62,9 @@ export default function AboutImagesManager() {
     e.preventDefault();
     try {
       if (editingImage?.id) {
-        await updateAboutImage(editingImage.id, formData);
+        await adminService.updateAboutImage(editingImage.id, formData);
       } else {
-        await createAboutImage(formData);
+        await adminService.createAboutImage(formData);
       }
       await loadImages();
       resetForm();
@@ -140,7 +83,7 @@ export default function AboutImagesManager() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this image?')) return;
     try {
-      await deleteAboutImage(id);
+      await adminService.deleteAboutImage(id);
       await loadImages();
       resetForm();
     } catch (error) {
