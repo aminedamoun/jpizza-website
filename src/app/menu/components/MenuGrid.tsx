@@ -216,12 +216,12 @@ export default function MenuGrid() {
     <section className="py-20 px-6 lg:px-12 bg-background">
       <div className="max-w-7xl mx-auto">
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in">
+        <div className="flex overflow-x-auto sm:flex-wrap sm:justify-center gap-2 sm:gap-4 mb-8 animate-fade-in -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.value)}
-              className={`px-8 py-3 text-sm uppercase tracking-[0.15em] font-medium transition-all duration-500 border ${
+              className={`flex-shrink-0 px-4 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm uppercase tracking-[0.15em] font-medium transition-all duration-500 border ${
                 activeCategory === category.value
                   ? 'bg-primary text-primary-foreground border-primary shadow-[0_4px_20px_rgba(0,0,0,0.15)] scale-105'
                   : 'bg-transparent text-foreground border-muted-foreground/20 hover:border-primary/60 hover:bg-primary/5 hover:shadow-[0_2px_12px_rgba(0,0,0,0.08)]'
@@ -234,10 +234,10 @@ export default function MenuGrid() {
 
         {/* Subcategory Tabs */}
         {subcategories.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fade-in">
+          <div className="flex overflow-x-auto sm:flex-wrap sm:justify-center gap-2 sm:gap-3 mb-8 animate-fade-in -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
             <button
               onClick={() => setActiveSubcategory(null)}
-              className={`px-6 py-2 text-xs uppercase tracking-[0.12em] font-medium transition-all duration-300 border rounded-full ${
+              className={`flex-shrink-0 px-4 sm:px-6 py-2 text-xs uppercase tracking-[0.12em] font-medium transition-all duration-300 border rounded-full ${
                 activeSubcategory === null
                   ? 'bg-accent text-white border-accent shadow-md'
                   : 'bg-transparent text-muted-foreground border-muted-foreground/20 hover:border-accent/60 hover:bg-accent/5'
@@ -249,7 +249,7 @@ export default function MenuGrid() {
               <button
                 key={subcategory.id}
                 onClick={() => setActiveSubcategory(subcategory.id)}
-                className={`px-6 py-2 text-xs uppercase tracking-[0.12em] font-medium transition-all duration-300 border rounded-full ${
+                className={`flex-shrink-0 px-4 sm:px-6 py-2 text-xs uppercase tracking-[0.12em] font-medium transition-all duration-300 border rounded-full ${
                   activeSubcategory === subcategory.id
                     ? 'bg-accent text-white border-accent shadow-md'
                     : 'bg-transparent text-muted-foreground border-muted-foreground/20 hover:border-accent/60 hover:bg-accent/5'

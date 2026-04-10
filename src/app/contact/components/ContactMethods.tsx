@@ -57,7 +57,7 @@ export default function ContactMethods() {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Icon */}
-              <div className="w-14 h-14 flex items-center justify-center border-2 border-primary mb-5 group-hover:bg-primary transition-all duration-300">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center border-2 border-primary mb-5 group-hover:bg-primary transition-all duration-300">
                 <Icon
                   name={method.icon as any}
                   size={28}

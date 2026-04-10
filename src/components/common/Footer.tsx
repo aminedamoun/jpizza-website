@@ -24,7 +24,7 @@ export default function Footer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex flex-wrap gap-8 text-xs uppercase tracking-widest animate-fade-in delay-200">
+          <div className="flex flex-wrap gap-4 sm:gap-8 text-xs uppercase tracking-widest animate-fade-in delay-200">
             <Link href="/menu" className="hover:text-primary transition-colors duration-300">
               Menu
             </Link>

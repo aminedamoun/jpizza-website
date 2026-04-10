@@ -69,7 +69,7 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="absolute inset-0 flex items-center justify-center px-6 lg:px-12">
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-end">
           {/* Main Headline */}
           <div className="lg:col-span-8">
             <div className="flex items-center gap-3 mb-4 animate-fade-in delay-100">
@@ -78,7 +78,7 @@ export default function HeroSection() {
               </span>
             </div>
 
-            <h1 className="font-serif mb-6 animate-fade-in-up delay-200 text-5xl text-neutral-50">
+            <h1 className="font-serif mb-6 animate-fade-in-up delay-200 text-3xl sm:text-4xl lg:text-5xl text-neutral-50">
               AUTHENTIC
               <br />
               <span className="text-primary">ITALIAN</span>

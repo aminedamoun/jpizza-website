@@ -67,7 +67,7 @@ export default function TeamSection() {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {teamMembers.map((member, index) =>
             <div key={member.id} className="group">
               {/* Image */}
