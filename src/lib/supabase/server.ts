@@ -1,0 +1,41 @@
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+
+export async function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.');
+  }
+
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    supabaseUrl,
+    supabaseAnonKey,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet?.forEach(({ name, value, options }) => {
+              const cookieOptions = {
+                ...options,
+                sameSite: 'none' as const,
+                secure: true,
+                httpOnly: options?.httpOnly,
+                path: options?.path || '/',
+              };
+              cookieStore.set(name, value, cookieOptions);
+            });
+          } catch {
+            // Handle server component context
+          }
+        },
+      },
+    }
+  );
+}
