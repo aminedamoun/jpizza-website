@@ -8,8 +8,7 @@ import {
   subcategories as staticSubcategories,
   aboutImages as staticAboutImages,
 } from '@/lib/data/staticData';
-
-export type {
+import type {
   AdminMenuItem,
   AdminRestaurantImage,
   AdminOffer,
@@ -18,169 +17,278 @@ export type {
   AboutImage,
 } from '@/lib/data/staticData';
 
-// In-memory copies so admin edits persist within a session
-let menuItemsStore = [...adminMenuItems];
-let restaurantImagesStore = [...adminRestaurantImages];
-let offersStore = [...adminOffers];
-let categoriesStore = [...staticCategories];
-let subcategoriesStore = [...staticSubcategories];
-let aboutImagesStore = [...staticAboutImages];
+export type { AdminMenuItem, AdminRestaurantImage, AdminOffer, Category, Subcategory, AboutImage };
+
+// ---------------------------------------------------------------------------
+// localStorage helpers
+// ---------------------------------------------------------------------------
+
+const STORAGE_KEYS = {
+  menuItems: 'jpizza_menu_items',
+  restaurantImages: 'jpizza_restaurant_images',
+  offers: 'jpizza_offers',
+  categories: 'jpizza_categories',
+  subcategories: 'jpizza_subcategories',
+  aboutImages: 'jpizza_about_images',
+} as const;
+
+function loadFromStorage<T>(key: string, fallback: T[]): T[] {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored) return JSON.parse(stored);
+  } catch {
+    // corrupted data — reset
+  }
+  return fallback;
+}
+
+function saveToStorage<T>(key: string, data: T[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {
+    // storage full — silent fail
+  }
+}
+
+// ---------------------------------------------------------------------------
+// In-memory stores (hydrated from localStorage on first access)
+// ---------------------------------------------------------------------------
+
+let _menuItemsStore: AdminMenuItem[] | null = null;
+let _restaurantImagesStore: AdminRestaurantImage[] | null = null;
+let _offersStore: AdminOffer[] | null = null;
+let _categoriesStore: Category[] | null = null;
+let _subcategoriesStore: Subcategory[] | null = null;
+let _aboutImagesStore: AboutImage[] | null = null;
+
+function getMenuItems() {
+  if (!_menuItemsStore) _menuItemsStore = loadFromStorage(STORAGE_KEYS.menuItems, adminMenuItems);
+  return _menuItemsStore;
+}
+function getRestaurantImages() {
+  if (!_restaurantImagesStore) _restaurantImagesStore = loadFromStorage(STORAGE_KEYS.restaurantImages, adminRestaurantImages);
+  return _restaurantImagesStore;
+}
+function getOffers() {
+  if (!_offersStore) _offersStore = loadFromStorage(STORAGE_KEYS.offers, adminOffers);
+  return _offersStore;
+}
+function getCategories() {
+  if (!_categoriesStore) _categoriesStore = loadFromStorage(STORAGE_KEYS.categories, staticCategories);
+  return _categoriesStore;
+}
+function getSubcategories() {
+  if (!_subcategoriesStore) _subcategoriesStore = loadFromStorage(STORAGE_KEYS.subcategories, staticSubcategories);
+  return _subcategoriesStore;
+}
+function getAboutImages() {
+  if (!_aboutImagesStore) _aboutImagesStore = loadFromStorage(STORAGE_KEYS.aboutImages, staticAboutImages);
+  return _aboutImagesStore;
+}
 
 function generateId() {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
+// ---------------------------------------------------------------------------
+// Admin service
+// ---------------------------------------------------------------------------
+
 export const adminService = {
-  // File Upload (local placeholder - stores as data URL)
-  async uploadImage(_file: File): Promise<string> {
-    return '/assets/images/no_image.png';
+  // File Upload — convert to data URL so it works locally
+  async uploadImage(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
   },
 
-  // Menu Items CRUD
+  // --- Menu Items CRUD ---
   async getAllMenuItems() {
-    return menuItemsStore;
+    return getMenuItems();
   },
 
-  async createMenuItem(item: Omit<typeof adminMenuItems[0], 'id'>) {
+  async createMenuItem(item: Omit<AdminMenuItem, 'id'>) {
+    const store = getMenuItems();
     const newItem = { ...item, id: generateId() };
-    menuItemsStore.push(newItem);
+    store.push(newItem);
+    saveToStorage(STORAGE_KEYS.menuItems, store);
     return newItem;
   },
 
-  async updateMenuItem(id: string, updates: Partial<typeof adminMenuItems[0]>) {
-    const index = menuItemsStore.findIndex((i) => i.id === id);
+  async updateMenuItem(id: string, updates: Partial<AdminMenuItem>) {
+    const store = getMenuItems();
+    const index = store.findIndex((i) => i.id === id);
     if (index >= 0) {
-      menuItemsStore[index] = { ...menuItemsStore[index], ...updates };
-      return menuItemsStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.menuItems, store);
+      return store[index];
     }
     throw new Error('Menu item not found');
   },
 
   async deleteMenuItem(id: string) {
-    menuItemsStore = menuItemsStore.filter((i) => i.id !== id);
+    const store = getMenuItems();
+    const filtered = store.filter((i) => i.id !== id);
+    _menuItemsStore = filtered;
+    saveToStorage(STORAGE_KEYS.menuItems, filtered);
   },
 
-  // Restaurant Images CRUD
+  // --- Restaurant Images CRUD ---
   async getAllRestaurantImages() {
-    return restaurantImagesStore;
+    return getRestaurantImages();
   },
 
-  async createRestaurantImage(image: Omit<typeof adminRestaurantImages[0], 'id'>) {
+  async createRestaurantImage(image: Omit<AdminRestaurantImage, 'id'>) {
+    const store = getRestaurantImages();
     const newImage = { ...image, id: generateId() };
-    restaurantImagesStore.push(newImage);
+    store.push(newImage);
+    saveToStorage(STORAGE_KEYS.restaurantImages, store);
     return newImage;
   },
 
-  async updateRestaurantImage(id: string, updates: Partial<typeof adminRestaurantImages[0]>) {
-    const index = restaurantImagesStore.findIndex((i) => i.id === id);
+  async updateRestaurantImage(id: string, updates: Partial<AdminRestaurantImage>) {
+    const store = getRestaurantImages();
+    const index = store.findIndex((i) => i.id === id);
     if (index >= 0) {
-      restaurantImagesStore[index] = { ...restaurantImagesStore[index], ...updates };
-      return restaurantImagesStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.restaurantImages, store);
+      return store[index];
     }
     throw new Error('Image not found');
   },
 
   async deleteRestaurantImage(id: string) {
-    restaurantImagesStore = restaurantImagesStore.filter((i) => i.id !== id);
+    const filtered = getRestaurantImages().filter((i) => i.id !== id);
+    _restaurantImagesStore = filtered;
+    saveToStorage(STORAGE_KEYS.restaurantImages, filtered);
   },
 
-  // Offers CRUD
+  // --- Offers CRUD ---
   async getAllOffers() {
-    return offersStore;
+    return getOffers();
   },
 
-  async createOffer(offer: Omit<typeof adminOffers[0], 'id'>) {
+  async createOffer(offer: Omit<AdminOffer, 'id'>) {
+    const store = getOffers();
     const newOffer = { ...offer, id: generateId() };
-    offersStore.push(newOffer);
+    store.push(newOffer);
+    saveToStorage(STORAGE_KEYS.offers, store);
     return newOffer;
   },
 
-  async updateOffer(id: string, updates: Partial<typeof adminOffers[0]>) {
-    const index = offersStore.findIndex((i) => i.id === id);
+  async updateOffer(id: string, updates: Partial<AdminOffer>) {
+    const store = getOffers();
+    const index = store.findIndex((i) => i.id === id);
     if (index >= 0) {
-      offersStore[index] = { ...offersStore[index], ...updates };
-      return offersStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.offers, store);
+      return store[index];
     }
     throw new Error('Offer not found');
   },
 
   async deleteOffer(id: string) {
-    offersStore = offersStore.filter((i) => i.id !== id);
+    const filtered = getOffers().filter((i) => i.id !== id);
+    _offersStore = filtered;
+    saveToStorage(STORAGE_KEYS.offers, filtered);
   },
 
-  // Categories CRUD
+  // --- Categories CRUD ---
   async getAllCategories() {
-    return categoriesStore;
+    return getCategories();
   },
 
-  async createCategory(category: Omit<typeof staticCategories[0], 'id'>) {
+  async createCategory(category: Omit<Category, 'id'>) {
+    const store = getCategories();
     const newCategory = { ...category, id: generateId() };
-    categoriesStore.push(newCategory);
+    store.push(newCategory);
+    saveToStorage(STORAGE_KEYS.categories, store);
     return newCategory;
   },
 
-  async updateCategory(id: string, updates: Partial<typeof staticCategories[0]>) {
-    const index = categoriesStore.findIndex((c) => c.id === id);
+  async updateCategory(id: string, updates: Partial<Category>) {
+    const store = getCategories();
+    const index = store.findIndex((c) => c.id === id);
     if (index >= 0) {
-      categoriesStore[index] = { ...categoriesStore[index], ...updates };
-      return categoriesStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.categories, store);
+      return store[index];
     }
     throw new Error('Category not found');
   },
 
   async deleteCategory(id: string) {
-    categoriesStore = categoriesStore.filter((c) => c.id !== id);
+    const filtered = getCategories().filter((c) => c.id !== id);
+    _categoriesStore = filtered;
+    saveToStorage(STORAGE_KEYS.categories, filtered);
   },
 
-  // Subcategories CRUD
+  // --- Subcategories CRUD ---
   async getAllSubcategories() {
-    return subcategoriesStore;
+    return getSubcategories();
   },
 
   async getSubcategoriesByCategory(categoryId: string) {
-    return subcategoriesStore.filter((s) => s.categoryId === categoryId);
+    return getSubcategories().filter((s) => s.categoryId === categoryId);
   },
 
-  async createSubcategory(subcategory: Omit<typeof staticSubcategories[0], 'id'>) {
+  async createSubcategory(subcategory: Omit<Subcategory, 'id'>) {
+    const store = getSubcategories();
     const newSub = { ...subcategory, id: generateId() };
-    subcategoriesStore.push(newSub);
+    store.push(newSub);
+    saveToStorage(STORAGE_KEYS.subcategories, store);
     return newSub;
   },
 
-  async updateSubcategory(id: string, updates: Partial<typeof staticSubcategories[0]>) {
-    const index = subcategoriesStore.findIndex((s) => s.id === id);
+  async updateSubcategory(id: string, updates: Partial<Subcategory>) {
+    const store = getSubcategories();
+    const index = store.findIndex((s) => s.id === id);
     if (index >= 0) {
-      subcategoriesStore[index] = { ...subcategoriesStore[index], ...updates };
-      return subcategoriesStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.subcategories, store);
+      return store[index];
     }
     throw new Error('Subcategory not found');
   },
 
   async deleteSubcategory(id: string) {
-    subcategoriesStore = subcategoriesStore.filter((s) => s.id !== id);
+    const filtered = getSubcategories().filter((s) => s.id !== id);
+    _subcategoriesStore = filtered;
+    saveToStorage(STORAGE_KEYS.subcategories, filtered);
   },
 
-  // About Images CRUD
+  // --- About Images CRUD ---
   async getAllAboutImages() {
-    return aboutImagesStore;
+    return getAboutImages();
   },
 
-  async createAboutImage(image: Omit<typeof staticAboutImages[0], 'id'>) {
+  async createAboutImage(image: Omit<AboutImage, 'id'>) {
+    const store = getAboutImages();
     const newImage = { ...image, id: generateId() };
-    aboutImagesStore.push(newImage);
+    store.push(newImage);
+    saveToStorage(STORAGE_KEYS.aboutImages, store);
     return newImage;
   },
 
-  async updateAboutImage(id: string, updates: Partial<typeof staticAboutImages[0]>) {
-    const index = aboutImagesStore.findIndex((i) => i.id === id);
+  async updateAboutImage(id: string, updates: Partial<AboutImage>) {
+    const store = getAboutImages();
+    const index = store.findIndex((i) => i.id === id);
     if (index >= 0) {
-      aboutImagesStore[index] = { ...aboutImagesStore[index], ...updates };
-      return aboutImagesStore[index];
+      store[index] = { ...store[index], ...updates };
+      saveToStorage(STORAGE_KEYS.aboutImages, store);
+      return store[index];
     }
     throw new Error('About image not found');
   },
 
   async deleteAboutImage(id: string) {
-    aboutImagesStore = aboutImagesStore.filter((i) => i.id !== id);
+    const filtered = getAboutImages().filter((i) => i.id !== id);
+    _aboutImagesStore = filtered;
+    saveToStorage(STORAGE_KEYS.aboutImages, filtered);
   },
 };
