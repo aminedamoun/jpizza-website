@@ -13,10 +13,10 @@ export const metadata: Metadata = {
   description: 'Experience authentic Naples-style pizza in Downtown Dubai. Traditional oven perfection with imported Italian ingredients, 24-hour fermented dough.',
   icons: {
     icon: [
-      { url: '/assets/images/jpizz-logo-1770822937653.png', type: 'image/png' }
+      { url: '/assets/images/jpizz-logo-1770822937653.webp', type: 'image/webp' }
     ],
-    shortcut: '/assets/images/jpizz-logo-1770822937653.png',
-    apple: '/assets/images/jpizz-logo-1770822937653.png',
+    shortcut: '/assets/images/jpizz-logo-1770822937653.webp',
+    apple: '/assets/images/jpizz-logo-1770822937653.webp',
   },
 };
 
