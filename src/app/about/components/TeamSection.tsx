@@ -17,7 +17,7 @@ const initialTeamMembers: TeamMember[] = [
     name: 'Marco Rossi',
     role: 'Founder & Head Pizzaiolo',
     bio: '20 years of experience in Naples, trained by third-generation masters',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_158585551-1763292628455.png",
+    image: "/assets/images/team-1.webp",
     alt: 'Chef Marco Rossi in white chef uniform standing in restaurant kitchen'
   },
   {
@@ -33,7 +33,7 @@ const initialTeamMembers: TeamMember[] = [
     name: 'Antonio Ricci',
     role: 'Pizzaiolo',
     bio: 'Naples native with 15 years of traditional oven expertise',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_1db4ccc5d-1766483361263.png",
+    image: "/assets/images/team-2.webp",
     alt: 'Pizzaiolo Antonio Ricci working with pizza dough in traditional kitchen'
   }
 ];

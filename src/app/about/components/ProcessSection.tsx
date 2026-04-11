@@ -18,7 +18,7 @@ const initialProcessSteps: ProcessStep[] = [
     number: '01',
     title: '24-Hour Fermentation',
     description: 'Italian 00 flour, water, salt, and yeast. The dough ferments for 24 hours at controlled temperature, developing complex flavors and our signature airy texture.',
-    image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1c601ed42-1765214343832.png',
+    image: '/assets/images/process-step.webp',
     alt: 'Pizza dough balls fermenting in wooden trays covered with cloth in temperature-controlled environment',
     detail: '24 hrs · 18°C'
   },
@@ -27,7 +27,7 @@ const initialProcessSteps: ProcessStep[] = [
     number: '02',
     title: 'Premium Toppings',
     description: 'Only the finest ingredients make it onto our pizzas. San Marzano tomatoes, buffalo mozzarella, Parma ham, fresh basil — all imported from Italy and prepared fresh daily.',
-    image: "/assets/images/seasoning-1774603823449.png",
+    image: "/assets/images/seasoning-1774603823449.webp",
     alt: 'Fresh Italian ingredients including buffalo mozzarella, San Marzano tomatoes, and basil on marble counter',
     detail: '100% Italian'
   },
@@ -45,7 +45,7 @@ const initialProcessSteps: ProcessStep[] = [
     number: '04',
     title: 'Served Fresh',
     description: 'Each pizza goes from oven to table in minutes, ensuring you experience the perfect temperature, texture, and flavor. The way it was meant to be enjoyed.',
-    image: "/assets/images/Seoul_City-1774603224220.jpeg",
+    image: "/assets/images/Seoul_City-1774603224220.webp",
     alt: 'Freshly baked Margherita pizza being served on wooden board with steam rising from melted cheese',
     detail: 'Oven to table'
   }

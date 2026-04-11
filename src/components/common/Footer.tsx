@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="animate-fade-in">
             <Link href="/homepage" className="block mb-3">
               <AppImage
-                src="/assets/images/jpizz-logo-1770822937653.png"
+                src="/assets/images/jpizz-logo-1770822937653.webp"
                 alt="JPizza logo"
                 className="h-12 w-auto object-contain"
               />

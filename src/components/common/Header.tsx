@@ -40,7 +40,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/homepage" className="flex items-center hover:opacity-80 transition-all duration-300 animate-fade-in">
             <AppImage
-              src="/assets/images/jpizz-logo-1770822937653.png"
+              src="/assets/images/jpizz-logo-1770822937653.webp"
               alt="Restaurant logo"
               className="h-12 w-auto object-contain" />
 

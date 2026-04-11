@@ -14,14 +14,14 @@ const deliveryPartners: DeliveryPartner[] = [
 {
   id: 'partner_talabat',
   name: 'Talabat',
-  logo: "/assets/images/talabat-1774517513507.png",
+  logo: "/assets/images/talabat-1774517513507.webp",
   link: 'https://www.talabat.com/uae/j-pizza-bar',
   alt: 'Talabat food delivery service logo'
 },
 {
   id: 'partner_deliveroo',
   name: 'Deliveroo',
-  logo: "/assets/images/deliveroo-1774521176397.png",
+  logo: "/assets/images/deliveroo-1774521176397.webp",
   link: 'https://deliveroo.ae/menu/dubai/downtown-dubai-mall/j-pizza-bar',
   alt: 'Deliveroo food delivery service logo'
 }];

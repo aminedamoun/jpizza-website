@@ -105,7 +105,7 @@ export default function DeliveryPromoSection() {
           <div className="relative animate-slide-in-right">
             <div className="aspect-video relative overflow-hidden border-2 border-primary/20">
               <AppImage
-                src="https://6949b72b30e1aa8ca4b7eef2.imgix.net/i-recommend-eat-this-delicious-pizza-cheerful-bus-2026-01-11-08-23-33-utc.jpg"
+                src="/assets/images/delivery-promo.webp"
                 alt={offer.imageAlt}
                 className="w-full h-full object-cover" />
 

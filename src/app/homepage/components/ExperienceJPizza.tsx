@@ -3,27 +3,23 @@
 import { useState, useEffect } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import { adminService } from '@/lib/services/adminService';
+import { adminRestaurantImages } from '@/lib/data/staticData';
 
 import type { AdminRestaurantImage as RestaurantImage } from '@/lib/data/staticData';
 
 export default function ExperienceJPizza() {
-  const [images, setImages] = useState<RestaurantImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState<RestaurantImage[]>(adminRestaurantImages);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    async function loadImages() {
+    (async () => {
       try {
         const restaurantImages = await adminService.getAllRestaurantImages();
-        setImages(restaurantImages);
+        if (restaurantImages?.length) setImages(restaurantImages);
       } catch (error) {
         console.error('Error loading restaurant images:', error);
-      } finally {
-        setLoading(false);
       }
-    }
-
-    loadImages();
+    })();
   }, []);
 
   // Keyboard navigation for lightbox
@@ -64,24 +60,6 @@ export default function ExperienceJPizza() {
     });
   };
 
-  if (loading) {
-    return (
-      <section className="py-24 px-6 lg:px-12 bg-background">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="h-8 bg-muted rounded w-64 mx-auto mb-4 animate-pulse" />
-            <div className="h-12 bg-muted rounded w-96 mx-auto mb-4 animate-pulse" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-64 bg-muted rounded animate-pulse" />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   if (images.length === 0) {
     return null;
   }
@@ -118,7 +96,7 @@ export default function ExperienceJPizza() {
                   src={image.imageUrl}
                   alt={image.imageAlt}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
@@ -205,7 +183,7 @@ export default function ExperienceJPizza() {
                 src={images[selectedImageIndex].imageUrl}
                 alt={images[selectedImageIndex].imageAlt}
                 fill
-                className="object-contain"
+                className="w-full h-full object-contain"
                 sizes="90vw"
                 priority
               />

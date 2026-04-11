@@ -14,7 +14,7 @@ export default function StorySection() {
           <div className="lg:col-span-5 relative mb-12 lg:mb-0">
             <div className="aspect-[3/4] overflow-hidden border border-border relative group">
               <img
-                src="/assets/images/aboutus1-1774604157665.jpg"
+                src="/assets/images/aboutus1-1774604157665.webp"
                 alt="Chef Marco hand-stretching pizza dough using traditional Neapolitan technique"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" />
               

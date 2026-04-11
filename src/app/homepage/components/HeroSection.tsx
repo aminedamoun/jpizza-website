@@ -35,7 +35,7 @@ export default function HeroSection() {
         loop
         playsInline
         preload="none"
-        poster="https://img.rocket.new/generatedImages/rocket_gen_img_1c2b3d236-1767009263868.png">
+        poster="/assets/images/hero-poster.webp">
         
         <source src="https://6949b72b30e1aa8ca4b7eef2.imgix.net/BANNER%202.webm" type="video/webm" />
       </video>
@@ -49,7 +49,7 @@ export default function HeroSection() {
         loop
         playsInline
         preload="none"
-        poster="https://img.rocket.new/generatedImages/rocket_gen_img_1c2b3d236-1767009263868.png">
+        poster="/assets/images/hero-poster.webp">
         
         <source src="https://6949b72b30e1aa8ca4b7eef2.imgix.net/j%20banner%20vert.webm" type="video/webm" />
       </video>
@@ -57,7 +57,7 @@ export default function HeroSection() {
       {/* Fallback Image for Mobile (if video fails) */}
       <div className="hero-video-fallback absolute inset-0">
         <AppImage
-          src="https://img.rocket.new/generatedImages/rocket_gen_img_1c2b3d236-1767009263868.png"
+          src="/assets/images/hero-poster.webp"
           alt="Wood-fired pizza being prepared with fresh ingredients in authentic Italian style"
           className="w-full h-full object-cover"
           priority />

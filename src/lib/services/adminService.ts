@@ -32,9 +32,17 @@ const STORAGE_KEYS = {
   aboutImages: 'jpizza_about_images',
 } as const;
 
+const STORAGE_VERSION_KEY = 'jpizza_storage_version';
+const STORAGE_VERSION = '2'; // bump when bundled image paths change
+
 function loadFromStorage<T>(key: string, fallback: T[]): T[] {
   if (typeof window === 'undefined') return fallback;
   try {
+    if (localStorage.getItem(STORAGE_VERSION_KEY) !== STORAGE_VERSION) {
+      Object.values(STORAGE_KEYS).forEach((k) => localStorage.removeItem(k));
+      localStorage.setItem(STORAGE_VERSION_KEY, STORAGE_VERSION);
+      return fallback;
+    }
     const stored = localStorage.getItem(key);
     if (stored) return JSON.parse(stored);
   } catch {
