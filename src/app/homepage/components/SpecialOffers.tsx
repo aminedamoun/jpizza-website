@@ -5,7 +5,7 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 import { menuService } from '@/lib/services/menuService';
-import type { Offer } from '@/lib/data/staticData';
+import { offers as staticOffers, type Offer } from '@/lib/data/staticData';
 
 function StarRating({ rating = 5 }: { rating?: number }) {
   return (
@@ -30,40 +30,13 @@ function StarRating({ rating = 5 }: { rating?: number }) {
 }
 
 export default function SpecialOffers() {
-  const [offers, setOffers] = useState<Offer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [offers, setOffers] = useState<Offer[]>(staticOffers as Offer[]);
 
   useEffect(() => {
-    async function loadOffers() {
-      try {
-        const data = await menuService.getActiveOffers();
-        setOffers(data);
-      } catch (error) {
-        console.error('Error loading offers:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadOffers();
+    menuService.getActiveOffers().then((data) => {
+      if (data?.length) setOffers(data);
+    }).catch(() => {});
   }, []);
-
-  if (loading) {
-    return (
-      <section className="py-24 px-6 lg:px-12 bg-muted">
-        <div className="max-w-7xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-card rounded w-64 mx-auto mb-12" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-96 bg-card rounded" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (offers.length === 0) return null;
 
@@ -100,7 +73,9 @@ export default function SpecialOffers() {
                 <AppImage
                   src={offer.imageUrl}
                   alt={offer.imageAlt}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 {/* Valid Until badge */}
                 {offer.validUntil && (

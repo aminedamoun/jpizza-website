@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import AppImage from '@/components/ui/AppImage';
 import Link from 'next/link';
 import { getWhatsAppUrl, getGeneralOrderMessage } from '@/lib/whatsapp';
 
@@ -53,16 +52,6 @@ export default function HeroSection() {
         
         <source src="https://6949b72b30e1aa8ca4b7eef2.imgix.net/j%20banner%20vert.webm" type="video/webm" />
       </video>
-
-      {/* Fallback Image for Mobile (if video fails) */}
-      <div className="hero-video-fallback absolute inset-0">
-        <AppImage
-          src="/assets/images/hero-poster.webp"
-          alt="Wood-fired pizza being prepared with fresh ingredients in authentic Italian style"
-          className="w-full h-full object-cover"
-          priority />
-        
-      </div>
 
       {/* Gradient Overlay */}
       <div className="hero-video-overlay" />

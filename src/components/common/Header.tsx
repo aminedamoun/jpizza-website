@@ -42,6 +42,10 @@ export default function Header() {
             <AppImage
               src="/assets/images/jpizz-logo-1770822937653.webp"
               alt="Restaurant logo"
+              width={140}
+              height={48}
+              priority
+              sizes="140px"
               className="h-12 w-auto object-contain" />
 
           </Link>

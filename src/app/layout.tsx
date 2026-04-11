@@ -27,11 +27,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/images/hero-poster.webp"
+          fetchPriority="high"
+        />
+        <link rel="preconnect" href="https://6949b72b30e1aa8ca4b7eef2.imgix.net" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://6949b72b30e1aa8ca4b7eef2.imgix.net" />
+      </head>
       <body>
         <AuthProvider>
           {children}
         </AuthProvider>
-</body>
+      </body>
     </html>
   );
 }

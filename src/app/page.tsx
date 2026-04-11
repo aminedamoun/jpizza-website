@@ -1,5 +1,13 @@
 import { Metadata } from 'next';
-import HomepageClient from './homepage/HomepageClient';
+import Header from '@/components/common/Header';
+import Footer from '@/components/common/Footer';
+import HeroSection from './homepage/components/HeroSection';
+import FeaturedPizzas from './homepage/components/FeaturedPizzas';
+import SpecialOffers from './homepage/components/SpecialOffers';
+import DeliveryPromoSection from './homepage/components/DeliveryPromoSection';
+import ExperienceJPizza from './homepage/components/ExperienceJPizza';
+import WhyJPizza from './homepage/components/WhyJPizza';
+import LocationSection from './homepage/components/LocationSection';
 
 export const metadata: Metadata = {
   title: 'Pizzeria - Authentic Italian Pizza in Downtown Dubai',
@@ -8,5 +16,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootPage() {
-  return <HomepageClient />;
+  return (
+    <div>
+      <Header />
+      <main>
+        <HeroSection />
+        <FeaturedPizzas />
+        <SpecialOffers />
+        <DeliveryPromoSection />
+        <ExperienceJPizza />
+        <WhyJPizza />
+        <LocationSection />
+      </main>
+      <Footer />
+    </div>
+  );
 }

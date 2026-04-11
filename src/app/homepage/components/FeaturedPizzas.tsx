@@ -5,43 +5,19 @@ import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
 import { menuService, type MenuItem } from '@/lib/services/menuService';
+import { menuItems as staticMenuItems } from '@/lib/data/staticData';
 import { getWhatsAppUrl, getOrderMessage } from '@/lib/whatsapp';
 
+const initialFeatured = staticMenuItems.filter((item) => item.isFeatured).slice(0, 5);
+
 export default function FeaturedPizzas() {
-  const [featuredPizzas, setFeaturedPizzas] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [featuredPizzas, setFeaturedPizzas] = useState<MenuItem[]>(initialFeatured);
 
   useEffect(() => {
-    async function loadFeaturedPizzas() {
-      try {
-        const pizzas = await menuService.getFeaturedPizzas(5);
-        setFeaturedPizzas(pizzas);
-      } catch (error) {
-        console.error('Error loading featured pizzas:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadFeaturedPizzas();
+    menuService.getFeaturedPizzas(5).then((pizzas) => {
+      if (pizzas?.length) setFeaturedPizzas(pizzas);
+    }).catch(() => {});
   }, []);
-
-  if (loading) {
-    return (
-      <section className="py-24 px-6 lg:px-12 bg-background">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded w-64 mx-auto mb-12" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) =>
-              <div key={i} className="h-96 bg-muted rounded" />
-              )}
-            </div>
-          </div>
-        </div>
-      </section>);
-
-  }
 
   return (
     <section className="py-24 px-6 lg:px-12 bg-background">
@@ -75,7 +51,9 @@ export default function FeaturedPizzas() {
                 <AppImage
                 src={pizza.image}
                 alt={pizza.alt}
-                className="w-full h-full object-cover" />
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover" />
 
               </div>
 
@@ -123,7 +101,9 @@ export default function FeaturedPizzas() {
                 <AppImage
                 src={pizza.image}
                 alt={pizza.alt}
-                className="w-full h-full object-cover" />
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover" />
 
               </div>
 
