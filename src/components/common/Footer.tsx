@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-10">
           {/* Logo & Location */}
           <div className="animate-fade-in">
-            <Link href="/homepage" className="block mb-3">
+            <Link href="/" className="block mb-3">
               <AppImage
                 src="/assets/images/jpizz-logo-1770822937653.webp"
                 alt="JPizza logo"
@@ -68,6 +68,17 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-border/30 text-[10px] text-muted-foreground uppercase tracking-widest animate-fade-in delay-400">
           <p>© 2026 JPizza • All Rights Reserved</p>
+          <p>
+            Website by{' '}
+            <a
+              href="https://dubaiprod.com"
+              target="_blank"
+              rel="noopener"
+              className="hover:text-foreground transition-colors duration-300"
+            >
+              dubaiprod.com
+            </a>
+          </p>
           <div className="flex gap-6">
             <Link href="#" className="hover:text-foreground transition-colors duration-300">
               Privacy

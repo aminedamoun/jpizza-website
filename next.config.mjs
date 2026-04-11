@@ -35,9 +35,9 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/homepage',
-        permanent: false,
+        source: '/homepage',
+        destination: '/',
+        permanent: true,
       },
     ];
   }

@@ -21,7 +21,7 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-  { id: 'nav_homepage', label: 'Home', href: '/homepage' },
+  { id: 'nav_homepage', label: 'Home', href: '/' },
   { id: 'nav_menu', label: 'Menu', href: '/menu' },
   { id: 'nav_delivery', label: 'Delivery', href: '/delivery' },
   { id: 'nav_reservations', label: 'Reservations', href: '/reservations' },
@@ -38,7 +38,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/homepage" className="flex items-center hover:opacity-80 transition-all duration-300 animate-fade-in">
+          <Link href="/" className="flex items-center hover:opacity-80 transition-all duration-300 animate-fade-in">
             <AppImage
               src="/assets/images/jpizz-logo-1770822937653.webp"
               alt="Restaurant logo"

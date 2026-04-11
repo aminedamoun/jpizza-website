@@ -32,7 +32,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <Link href="/homepage" className="font-serif text-3xl text-primary hover:text-accent transition-colors">
+          <Link href="/" className="font-serif text-3xl text-primary hover:text-accent transition-colors">
             J Pizza Bar
           </Link>
           <h2 className="mt-6 text-2xl font-serif text-primary">Admin Login</h2>
@@ -87,7 +87,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <Link href="/homepage" className="text-sm text-primary hover:text-accent transition-colors">
+            <Link href="/" className="text-sm text-primary hover:text-accent transition-colors">
               ← Back to Homepage
             </Link>
           </div>
